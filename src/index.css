@@ -1,0 +1,20 @@
+body {
+  box-sizing: border-box;
+  user-select: none;
+  /* background-color: rgb(143, 79, 79); */
+}
+
+.wrapper-table {
+  display: flex;
+  justify-content: center;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+td,
+th {
+  border: 1px solid black;
+  padding: 10px;
+}
