@@ -54,6 +54,11 @@ document.addEventListener("DOMContentLoaded", () => {
     return table;
   }
 
+  // function showtable() {
+  //   document
+  //     .querySelector(".wrapper-table")
+  //     .appendChild(makeTable(tableHead, myBase));
+  // }
   document
     .querySelector(".wrapper-table")
     .appendChild(makeTable(tableHead, myBase));
@@ -67,7 +72,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let direction = "";
 
   headTable.forEach(function (element, index) {
-    element.addEventListener('click', function () {
+    element.addEventListener('click', function (event) {
+      console.log(event.target);
       sorted(index);
     });
   });
@@ -100,6 +106,75 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+
+  // ===========================================================================
+  let bodyTable = table.querySelectorAll("td");
+  let editButton = document.querySelector('.edit_btns');
+
+  bodyTable.forEach(function (element, index) {
+    element.addEventListener('click', function (event) {
+      console.log(event.target, index);
+      if (document.querySelector('.edit') === null) {
+        redactElemTd(element)
+      }
+    })
+  })
+
+  function redactElemTd(elem) {
+    elem.classList.add('edit');
+    let data = elem.innerHTML
+    const textArea = document.createElement('textarea');
+    textArea.value = data;
+
+    elem.innerHTML = '';
+    elem.appendChild(textArea);
+    textArea.focus();
+    elem.appendChild(editButton);
+    editButton.style.display = 'block';
+
+    document.querySelector('.edit_btn-ok').addEventListener('click', function (event) {
+      elem.innerHTML = textArea.value
+
+      //  ВСПЛЫТИЕ!!!  решил сделать так, но хз верно ли ?
+      event.stopPropagation();
+      delEditClass()
+    })
+
+    document.querySelector('.edit_btn-cancel').addEventListener('click', function (event) {
+      elem.innerHTML = data
+
+      //  ВСПЛЫТИЕ!!!  решил сделать так, но хз верно ли ?
+      event.stopPropagation();
+      delEditClass()
+    })
+
+
+  }
+
+
+
+  function delEditClass() {
+    editButton.remove();
+    //  При втором измении тут вылетает ошибка, но продолжает работать 
+    document.querySelector('.edit').classList.remove("edit");
+    saveLocal();
+  }
+  function saveLocal() {
+    const tableWrap = document.querySelector('.wrapper-table').innerHTML;
+    localStorage.setItem('myTable111', tableWrap)
+  }
+
+
+  //  в localStorage грузит, но при пере
+
+  if (localStorage['myTable'] !== undefined) {
+    console.log("есть стораж");
+    document.querySelector('.wrapper-table').innerHTML = localStorage['myTable'];
+  }
+  // document.querySelector('.show').addEventListener('click', function () {
+  //   console.log('click');
+  //   showtable();
+  // })
 });
 
 

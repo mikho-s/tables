@@ -1,6 +1,5 @@
 body {
   box-sizing: border-box;
-  user-select: none;
   /* background-color: rgb(143, 79, 79); */
 }
 
@@ -17,4 +16,27 @@ td,
 th {
   border: 1px solid black;
   padding: 10px;
+}
+
+td textarea {
+  border: none;
+  resize: none;
+  outline: none;
+  overflow: auto;
+  background-color: rgb(228, 207, 207);
+}
+
+.edit {
+  position: relative;
+}
+
+.edit_btns {
+  position: absolute;
+  display: none;
+}
+
+.show-btn {
+  padding-top: 50px;
+  display: flex;
+  justify-content: center;
 }
