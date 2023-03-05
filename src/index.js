@@ -59,6 +59,14 @@ document.addEventListener("DOMContentLoaded", () => {
   //     .querySelector(".wrapper-table")
   //     .appendChild(makeTable(tableHead, myBase));
   // }
+
+  // const createTable = document.querySelector('.show');
+  // createTable.addEventListener('click', function () {
+  //   if (table == undefined) {
+  //     showtable()
+  //   }
+
+  // })
   document
     .querySelector(".wrapper-table")
     .appendChild(makeTable(tableHead, myBase));
@@ -147,34 +155,30 @@ document.addEventListener("DOMContentLoaded", () => {
       event.stopPropagation();
       delEditClass()
     })
-
-
   }
-
-
 
   function delEditClass() {
     editButton.remove();
-    //  При втором измении тут вылетает ошибка, но продолжает работать 
+    //  При втором измении тут вылетает ошибка, 
+    // но продолжает работать (после найстройки стоража не вылетает но и не меняется)
     document.querySelector('.edit').classList.remove("edit");
     saveLocal();
   }
   function saveLocal() {
     const tableWrap = document.querySelector('.wrapper-table').innerHTML;
-    localStorage.setItem('myTable111', tableWrap)
+    localStorage.setItem('myTable', tableWrap)
   }
 
-
-  //  в localStorage грузит, но при пере
-
-  if (localStorage['myTable'] !== undefined) {
+  if (localStorage.getItem('myTable') !== undefined && localStorage.getItem('myTable') !== null) {
     console.log("есть стораж");
-    document.querySelector('.wrapper-table').innerHTML = localStorage['myTable'];
+    document.querySelector('.wrapper-table').innerHTML = localStorage.getItem('myTable');
   }
-  // document.querySelector('.show').addEventListener('click', function () {
-  //   console.log('click');
-  //   showtable();
-  // })
+  const clearBtn = document.querySelector('.clear-btn');
+  clearBtn.addEventListener('click', function () {
+    localStorage.removeItem('myTable')
+    table.innerHTML = "";
+  })
+
 });
 
 

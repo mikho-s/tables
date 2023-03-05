@@ -35,8 +35,10 @@ td textarea {
   display: none;
 }
 
-.show-btn {
+.control-btn {
   padding-top: 50px;
+  padding-bottom: 50px;
   display: flex;
+  gap: 50px;
   justify-content: center;
 }
