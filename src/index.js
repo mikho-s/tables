@@ -54,22 +54,22 @@ document.addEventListener("DOMContentLoaded", () => {
     return table;
   }
 
-  // function showtable() {
-  //   document
-  //     .querySelector(".wrapper-table")
-  //     .appendChild(makeTable(tableHead, myBase));
-  // }
+  //  получается надо было поднять это выше 
+  //  сначала проверяем есть ли стораж или делаем новую таблицу
+  if (localStorage.getItem('myTable') !== undefined && localStorage.getItem('myTable') !== null) {
+    console.log("есть стораж");
+    document.querySelector('.wrapper-table').innerHTML = localStorage.getItem('myTable');
+  } else if (1) {
+    document
+      .querySelector(".wrapper-table")
+      .appendChild(makeTable(tableHead, myBase));
+  };
 
-  // const createTable = document.querySelector('.show');
-  // createTable.addEventListener('click', function () {
-  //   if (table == undefined) {
-  //     showtable()
-  //   }
 
-  // })
-  document
-    .querySelector(".wrapper-table")
-    .appendChild(makeTable(tableHead, myBase));
+
+  // document
+  //   .querySelector(".wrapper-table")
+  //   .appendChild(makeTable(tableHead, myBase));
 
   // ===========================================================================
 
@@ -80,9 +80,11 @@ document.addEventListener("DOMContentLoaded", () => {
   let direction = "";
 
   headTable.forEach(function (element, index) {
-    element.addEventListener('click', function (event) {
-      console.log(event.target);
-      sorted(index);
+    element.addEventListener('click', function () {
+      if (document.querySelector('.edit') === null) {
+        sorted(index);
+      }
+
     });
   });
 
@@ -169,10 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem('myTable', tableWrap)
   }
 
-  if (localStorage.getItem('myTable') !== undefined && localStorage.getItem('myTable') !== null) {
-    console.log("есть стораж");
-    document.querySelector('.wrapper-table').innerHTML = localStorage.getItem('myTable');
-  }
+
   const clearBtn = document.querySelector('.clear-btn');
   clearBtn.addEventListener('click', function () {
     localStorage.removeItem('myTable')
