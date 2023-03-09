@@ -42,3 +42,7 @@ td textarea {
   gap: 50px;
   justify-content: center;
 }
+
+.clear-btn {
+  display: none;
+}
