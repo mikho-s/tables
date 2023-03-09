@@ -1,9 +1,7 @@
 import './index.css';
 import { myBase } from "./data.js";
 
-
 document.addEventListener("DOMContentLoaded", () => {
-
   const tableHead = ["id", "name", "username", "email", "phone", "website"];
 
   const createTHwithContend = (content = "", elem = "td") => {
@@ -61,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (localStorage.getItem('myTable') !== undefined && localStorage.getItem('myTable') !== null) {
     console.log("есть стораж");
     document.querySelector('.wrapper-table').innerHTML = localStorage.getItem('myTable');
+    document.querySelector('.clear-btn').style.display = 'block'
   } else if (1) {
     document
       .querySelector(".wrapper-table")
@@ -95,9 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //  то я даже пока хз как вписать в нужные строки дата атрибут. пока проще просто указать индекс необхомых строк
 
   function sorted(index) {
-    console.log("sorted activate");
     let sortedTable;
-
     if (index == "0") {
       sortedTable = tableBody
         .sort((rowA, rowB) => +(rowA.cells[index].innerHTML) > +(rowB.cells[index].innerHTML) ? 1 : -1);
@@ -122,10 +119,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   // ===========================================================================
-
   let bodyTable = table.querySelectorAll("td");
   let editButton = document.querySelector('.edit_btns');
 
+  bodyTable.forEach(function (element, index) {
+    element.addEventListener('click', function (event) {
+      console.log(event.target, index);
+      if (document.querySelector('.edit') === null) {
+        redactElemTd(element)
+      }
+    })
+  })
 
   function redactElemTd(elem) {
     elem.classList.add('edit');
@@ -139,69 +143,40 @@ document.addEventListener("DOMContentLoaded", () => {
     elem.appendChild(editButton);
     editButton.style.display = 'block';
 
-    // document.querySelector('.edit_btns').addEventListener('click', function (event) {
-    document.addEventListener('click', function (event) {
-      const targetItem = event.target;
-      if (targetItem.classList.contains('edit_btn-ok')) {
-        elem.innerHTML = textArea.value
-        delEditClass();
-        console.log(" какого х оно візівается");
+    document.querySelector('.edit_btn-ok').addEventListener('click', function (event) {
+      elem.innerHTML = textArea.value
 
-      } else if (targetItem.classList.contains('edit_btn-cancel')) {
-        elem.innerHTML = data
-        console.log(" какого х оно візівается");
-        // работает не коректно 
-        delEditClass();
-      }
-    });
+      //  ВСПЛЫТИЕ!!!  решил сделать так, но хз верно ли ?
+      event.stopPropagation();
+      delEditClass()
+    })
+
+    document.querySelector('.edit_btn-cancel').addEventListener('click', function (event) {
+      elem.innerHTML = data
+
+      //  ВСПЛЫТИЕ!!!  решил сделать так, но хз верно ли ?
+      event.stopPropagation();
+      delEditClass()
+    })
   }
 
   function delEditClass() {
     editButton.remove();
-
-    if (document.querySelector('.edit')) {
-      document.querySelector('.edit').classList.remove("edit");
-    }
-    // document.querySelector('.edit').classList.remove("edit");
+    //  При втором измении тут вылетает ошибка, 
+    // но продолжает работать (после найстройки стоража не вылетает но и не меняется)
+    document.querySelector('.edit').classList.remove("edit");
     saveLocal();
   }
-
-
   function saveLocal() {
     const tableWrap = document.querySelector('.wrapper-table').innerHTML;
-    localStorage.setItem('myTable', tableWrap);
-  };
-
-  // ===========================================================================
-
+    localStorage.setItem('myTable', tableWrap)
+  }
 
 
   const clearBtn = document.querySelector('.clear-btn');
   clearBtn.addEventListener('click', function () {
     localStorage.removeItem('myTable')
     table.innerHTML = "";
-  })
-
-
-
-  // ниже добавил делегирование, один обработчик , вызывает разные функции 
-
-  // const wrapTable = document.querySelector(".wrapper-table");
-  document.addEventListener('click', function (event) {
-    let targetItem = event.target;
-
-    if (targetItem.tagName == 'TH' && document.querySelector('.edit') === null) {
-      let element = targetItem.innerHTML
-      let index1 = tableHead.indexOf(element)
-      console.log(index1);
-      sorted(index1);
-    }
-    else if (targetItem.tagName == 'TD' && document.querySelector('.edit') === null) {
-      // console.log("WTF");
-      redactElemTd(targetItem)
-    }
-
-
   })
 
 });
