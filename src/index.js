@@ -120,7 +120,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ===========================================================================
   let bodyTable = table.querySelectorAll("td");
-  let editButton = document.querySelector('.edit_btns');
+  let editButtons = document.querySelector('.edit_btns');
+  const textArea = document.createElement('textarea');
+
+
+  // +++++++++++++++++++++__ВАРИАНТ-1___+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   bodyTable.forEach(function (element, index) {
     element.addEventListener('click', function (event) {
@@ -128,43 +132,80 @@ document.addEventListener("DOMContentLoaded", () => {
       if (document.querySelector('.edit') === null) {
         redactElemTd(element)
       }
-    })
+    }, { capture: true })
   })
 
   function redactElemTd(elem) {
     elem.classList.add('edit');
     let data = elem.innerHTML
-    const textArea = document.createElement('textarea');
     textArea.value = data;
 
     elem.innerHTML = '';
     elem.appendChild(textArea);
     textArea.focus();
-    elem.appendChild(editButton);
-    editButton.style.display = 'block';
+    elem.appendChild(editButtons);
+    editButtons.style.display = 'block';
 
-    document.querySelector('.edit_btn-ok').addEventListener('click', function (event) {
+    document.querySelector('.edit_btn-ok').addEventListener('click', function () {
       elem.innerHTML = textArea.value
-
-      //  ВСПЛЫТИЕ!!!  решил сделать так, но хз верно ли ?
-      event.stopPropagation();
       delEditClass()
-    })
+    }, { once: true })
 
-    document.querySelector('.edit_btn-cancel').addEventListener('click', function (event) {
+    document.querySelector('.edit_btn-cancel').addEventListener('click', function () {
       elem.innerHTML = data
-
-      //  ВСПЛЫТИЕ!!!  решил сделать так, но хз верно ли ?
-      event.stopPropagation();
       delEditClass()
-    })
+    }, { once: true })
   }
+  // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+  // ++++++++++++++++++++++___ВАРИАНТ-2_______+++++++++++++++++++++++++++++++++++++
+
+  // bodyTable.forEach(function (element, index) {
+  //   element.addEventListener('click', function (event) {
+  //     console.log(event.target, index);
+  //     if (document.querySelector('.edit') === null) {
+  //       redactElemTd(element)
+  //     }
+  //   }, { capture: true })
+  // })
+  // function redactElemTd(elem) {
+  //   elem.classList.add('edit');
+  //   let data = elem.innerHTML
+  //   console.log(data);
+  //   // console.log(takeData);
+  //   textArea.value = data;
+  //   elem.innerHTML = '';
+  //   elem.appendChild(textArea);
+  //   textArea.focus();
+  //   elem.appendChild(editButtons);
+  //   editButtons.style.display = 'block';
+
+  //   document.querySelector('.edit_btn-ok').addEventListener('click', clickOk)
+
+  //   document.querySelector('.edit_btn-cancel').addEventListener('click', clickCancel)
+
+  // }
+
+  // function clickOk() {
+  //   let element = document.querySelector('.edit')
+  //   element.innerHTML = textArea.value
+  //   delEditClass()
+  // }
+  // function clickCancel() {
+  //   let element = document.querySelector('.edit')
+  //   element.innerHTML = data
+  //   delEditClass()
+  // }
+  // // document.querySelector('.edit_btn-ok').removeEventListener('click', clickOk)
+
+  // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   function delEditClass() {
-    editButton.remove();
+    editButtons.remove();
     //  При втором измении тут вылетает ошибка, 
     // но продолжает работать (после найстройки стоража не вылетает но и не меняется)
     document.querySelector('.edit').classList.remove("edit");
+
     saveLocal();
   }
   function saveLocal() {
