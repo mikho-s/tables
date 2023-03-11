@@ -114,47 +114,55 @@ document.addEventListener("DOMContentLoaded", () => {
   let bodyTable = table.querySelectorAll("td");
   let editButtons = document.querySelector('.edit_btns');
   const textArea = document.createElement('textarea');
+  const attrName = "data-default";
+
 
   bodyTable.forEach(function (element, index) {
     element.addEventListener('click', function (event) {
-      console.log(event.target, index);
+      // console.log(event.target, index);
       if (document.querySelector('.edit') === null) {
-        console.log('click1');
+        console.log('click 1');
         redactElemTd(element)
-
       }
     }, { capture: true })
   })
 
   function redactElemTd(elem) {
-    console.log('click2');
+    console.log('click 1.111');
+    console.log(elem);
+
     elem.classList.add('edit');
+    elem.setAttribute(attrName, elem.textContent);
+
     let data = elem.innerHTML
     textArea.value = data;
 
     elem.innerHTML = '';
     elem.appendChild(textArea);
     textArea.focus();
-
-    elem.insertAdjacentHTML("beforeEnd",
-      '<div class="edit_controls"><button class="edit_btn-ok">OK</button><button class="edit_btn-cancel">CANCEL</button></div>'
-    );
+    elem.appendChild(editButtons);
+    editButtons.style.display = 'block';
 
     document.querySelector('.edit_btn-ok').addEventListener('click', function () {
-      console.log('click3');
-
+      console.log('click ok');
+      console.log(elem);
       elem.innerHTML = textArea.value
       delEditClass()
     }, { once: true })
 
     document.querySelector('.edit_btn-cancel').addEventListener('click', function () {
-      elem.innerHTML = data
+      console.log('click cancel');
+      console.log(elem);
+      debugger
+      elem.innerHTML = elem.getAttribute(attrName);
       delEditClass()
     }, { once: true })
+
+
   }
 
-
   function delEditClass() {
+    editButtons.remove();
     document.querySelector('.edit').classList.remove("edit");
     saveLocal();
   }
@@ -171,5 +179,4 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 
 });
-
 
