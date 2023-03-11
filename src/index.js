@@ -54,8 +54,8 @@ document.addEventListener("DOMContentLoaded", () => {
     return table;
   }
 
-  //  получается надо было поднять это выше 
-  //  сначала проверяем есть ли стораж или делаем новую таблицу
+  // ===========================================================================
+
   if (localStorage.getItem('myTable') !== undefined && localStorage.getItem('myTable') !== null) {
     console.log("есть стораж");
     document.querySelector('.wrapper-table').innerHTML = localStorage.getItem('myTable');
@@ -68,11 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-  // document
-  //   .querySelector(".wrapper-table")
-  //   .appendChild(makeTable(tableHead, myBase));
-
-  // ===========================================================================
 
 
   const table = document.querySelector(".my_table");
@@ -89,9 +84,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // сортировка айди отдельно указана для столбца 0 - где нужна сортировка не как у строк
-  // но наверное правильнее через дата атрибут ? но т.к. таблицу мы создаем через джс а не через ХТМЛ
-  //  то я даже пока хз как вписать в нужные строки дата атрибут. пока проще просто указать индекс необхомых строк
 
   function sorted(index) {
     let sortedTable;
@@ -123,19 +115,19 @@ document.addEventListener("DOMContentLoaded", () => {
   let editButtons = document.querySelector('.edit_btns');
   const textArea = document.createElement('textarea');
 
-
-  // +++++++++++++++++++++__ВАРИАНТ-1___+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
   bodyTable.forEach(function (element, index) {
     element.addEventListener('click', function (event) {
       console.log(event.target, index);
       if (document.querySelector('.edit') === null) {
+        console.log('click1');
         redactElemTd(element)
+
       }
     }, { capture: true })
   })
 
   function redactElemTd(elem) {
+    console.log('click2');
     elem.classList.add('edit');
     let data = elem.innerHTML
     textArea.value = data;
@@ -143,10 +135,14 @@ document.addEventListener("DOMContentLoaded", () => {
     elem.innerHTML = '';
     elem.appendChild(textArea);
     textArea.focus();
-    elem.appendChild(editButtons);
-    editButtons.style.display = 'block';
+
+    elem.insertAdjacentHTML("beforeEnd",
+      '<div class="edit_controls"><button class="edit_btn-ok">OK</button><button class="edit_btn-cancel">CANCEL</button></div>'
+    );
 
     document.querySelector('.edit_btn-ok').addEventListener('click', function () {
+      console.log('click3');
+
       elem.innerHTML = textArea.value
       delEditClass()
     }, { once: true })
@@ -156,63 +152,17 @@ document.addEventListener("DOMContentLoaded", () => {
       delEditClass()
     }, { once: true })
   }
-  // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  // ++++++++++++++++++++++___ВАРИАНТ-2_______+++++++++++++++++++++++++++++++++++++
-
-  // bodyTable.forEach(function (element, index) {
-  //   element.addEventListener('click', function (event) {
-  //     console.log(event.target, index);
-  //     if (document.querySelector('.edit') === null) {
-  //       redactElemTd(element)
-  //     }
-  //   }, { capture: true })
-  // })
-  // function redactElemTd(elem) {
-  //   elem.classList.add('edit');
-  //   let data = elem.innerHTML
-  //   console.log(data);
-  //   // console.log(takeData);
-  //   textArea.value = data;
-  //   elem.innerHTML = '';
-  //   elem.appendChild(textArea);
-  //   textArea.focus();
-  //   elem.appendChild(editButtons);
-  //   editButtons.style.display = 'block';
-
-  //   document.querySelector('.edit_btn-ok').addEventListener('click', clickOk)
-
-  //   document.querySelector('.edit_btn-cancel').addEventListener('click', clickCancel)
-
-  // }
-
-  // function clickOk() {
-  //   let element = document.querySelector('.edit')
-  //   element.innerHTML = textArea.value
-  //   delEditClass()
-  // }
-  // function clickCancel() {
-  //   let element = document.querySelector('.edit')
-  //   element.innerHTML = data
-  //   delEditClass()
-  // }
-  // // document.querySelector('.edit_btn-ok').removeEventListener('click', clickOk)
-
-  // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   function delEditClass() {
-    editButtons.remove();
-    //  При втором измении тут вылетает ошибка, 
-    // но продолжает работать (после найстройки стоража не вылетает но и не меняется)
     document.querySelector('.edit').classList.remove("edit");
-
     saveLocal();
   }
+
   function saveLocal() {
     const tableWrap = document.querySelector('.wrapper-table').innerHTML;
     localStorage.setItem('myTable', tableWrap)
   }
-
 
   const clearBtn = document.querySelector('.clear-btn');
   clearBtn.addEventListener('click', function () {
