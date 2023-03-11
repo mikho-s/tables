@@ -66,10 +66,6 @@ document.addEventListener("DOMContentLoaded", () => {
       .appendChild(makeTable(tableHead, myBase));
   };
 
-
-
-
-
   const table = document.querySelector(".my_table");
   let headTable = table.querySelectorAll("th");
   let tableBody = Array.from(table.rows).slice(1);
@@ -109,63 +105,77 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-
   // ===========================================================================
   let bodyTable = table.querySelectorAll("td");
-  let editButtons = document.querySelector('.edit_btns');
-  const textArea = document.createElement('textarea');
+  let editButtons = document.querySelector(".edit_btns");
+  const textArea = document.createElement("textarea");
   const attrName = "data-default";
 
-
   bodyTable.forEach(function (element, index) {
-    element.addEventListener('click', function (event) {
-      // console.log(event.target, index);
-      if (document.querySelector('.edit') === null) {
-        console.log('click 1');
-        redactElemTd(element)
-      }
-    }, { capture: true })
-  })
+    element.addEventListener(
+      "click",
+      function (event) {
+        console.log(event.target, index);
+        if (document.querySelector(".edit") === null) {
+          redactElemTd(element);
+        }
+      },
+      { capture: true }
+    );
+  });
+
 
   function redactElemTd(elem) {
-    console.log('click 1.111');
-    console.log(elem);
-
-    elem.classList.add('edit');
+    elem.classList.add("edit");
     elem.setAttribute(attrName, elem.textContent);
-
-    let data = elem.innerHTML
+    let data = elem.innerHTML;
     textArea.value = data;
 
-    elem.innerHTML = '';
+    elem.innerHTML = "";
     elem.appendChild(textArea);
     textArea.focus();
     elem.appendChild(editButtons);
-    editButtons.style.display = 'block';
+    editButtons.style.display = "block";
 
-    document.querySelector('.edit_btn-ok').addEventListener('click', function () {
-      console.log('click ok');
-      console.log(elem);
-      elem.innerHTML = textArea.value
-      delEditClass()
-    }, { once: true })
+    document
+      .querySelector(".edit_btn-ok")
+      .addEventListener("click", clickOk);
 
-    document.querySelector('.edit_btn-cancel').addEventListener('click', function () {
-      console.log('click cancel');
-      console.log(elem);
-      debugger
-      elem.innerHTML = elem.getAttribute(attrName);
-      delEditClass()
-    }, { once: true })
-
-
+    document
+      .querySelector(".edit_btn-cancel")
+      .addEventListener("click", clickCancel);
   }
 
-  function delEditClass() {
-    editButtons.remove();
-    document.querySelector('.edit').classList.remove("edit");
-    saveLocal();
+  function clickOk() {
+    let element = document.querySelector('.edit')
+
+    document
+      .querySelector(".edit_btn-ok")
+      .removeEventListener("click", clickOk);
+    document
+      .querySelector(".edit_btn-ok")
+      .removeEventListener("click", clickCancel);
+
+    element.innerHTML = textArea.value
+    element.classList.remove("edit");
+
+    saveLocal()
   }
+  function clickCancel() {
+    let element = document.querySelector('.edit')
+
+    document
+      .querySelector(".edit_btn-ok")
+      .removeEventListener("click", clickOk);
+    document
+      .querySelector(".edit_btn-ok")
+      .removeEventListener("click", clickCancel);
+
+    element.innerHTML = element.getAttribute(attrName);
+    element.classList.remove("edit");
+    saveLocal()
+  }
+
 
   function saveLocal() {
     const tableWrap = document.querySelector('.wrapper-table').innerHTML;
@@ -177,6 +187,4 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.removeItem('myTable')
     table.innerHTML = "";
   })
-
 });
-
